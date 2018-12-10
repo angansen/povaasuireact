@@ -22,9 +22,9 @@ class SearchBox extends Component {
                 for (var i = 0; i < h4.length; i++) {
                     a = h4[i];
                     if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        h4[i].parentElement.classList.remove("hide");
+                        h4[i].parentElement.parentElement.classList.remove("hide");
                     } else {
-                        h4[i].parentElement.classList.add("hide");
+                        h4[i].parentElement.parentElement.classList.add("hide");
 
                     }
                    

@@ -29,27 +29,48 @@ class ContentBox extends Component {
             //  console.log(myObj.length);
               for (j in myObj) {
                 var sessionName=localStorage.getItem("user_name");
+                var img="";
+                if(myObj[j].IMAGE_PATH==null){
+                    img="deafult-images.png";
+                }else{
+                    img=myObj[j].IMAGE_PATH;
+                }
                   if(((JSON.stringify(sessionName)) != "null")){
                      // document.getElementById('dashPova').classList.remove('hide');
                      
                     if (myObj[j].IMPLEMENTED === 0) {
                         var cl = "column blue";
-                        var msg = '<b class="mt20 gray-light"><br/>Coming Soon.....</b>';
+                        var msg = '<b class=" gray-light">Coming Soon.....</b>';
+                        var btn="" + msg + "";
                     } else {
-                        cl = "column red";
-                        msg = "<b class='bord-cl mt20  btnClick'>Click Here &rarr;</b>";
+                        var cl = "column red";
+                       // msg = "<b class='bord-cl mt20  btnClick'>Click Here &rarr;</b>";
+                       var msg="";
+                       var btn=msg;
+                       
                     }
+                    x += '<div class="' + cl + '" type="'+myObj[j].ID+'" >' +
+                    "<div class='inline imagebox'><img src='./img/"+img+"'/></div><div class='inline'><h3>" + myObj[j].NAME + "</h3>" +
+                      "<p class='gray-light'>" + myObj[j].DESCRIPTION + "</p>" + btn + "</div></div>";
+
                   }else{
                     cl = "logincolumn red";
-                    msg = "<a href='/login'><b class='bord-cl mt20 loginbtn'>Login &rarr;</b></a>"; 
+                    var msg = "<a href='/login'><b class='bord-cl  loginbtn'>Login &rarr;</b></a>"; 
+                   var btn="<p class='btn-align'>" + msg + "</p>";
+
+
+
+                   
+                  // btn="";
                     //document.getElementById('dashPova').classList.add('hide');
+                    x += '<div class="' + cl + '" type="'+myObj[j].ID+'" >' +
+                    "<div class='inline imagebox'><img src='./img/"+img+"'/></div><div class='inline'><h3>" + myObj[j].NAME + "</h3>" +
+                      "<p class='gray-light'>" + myObj[j].DESCRIPTION + "</p>" + btn + "</div></div>";
+
                   }
                   
                   //<img src='https://cloud.oracle.com/opc/iaas/images/Jenkins-Logo-185x103.jpg'/>
-                  x += '<div class="' + cl + '" type="'+myObj[j].ID+'" >' +
-                    "<img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToxDANBcrjXWN0vcZGgMTraQOMbmyjFhRju9vlHthZbuRrWB-Q'/><h3>" + myObj[j].NAME + "</h3>" +
-                      "<p class='gray-light'>" + myObj[j].DESCRIPTION + "</p><p class='text-center btn-align'>" + msg + "</p></div>";
-
+                 
               }
               this.setState({
                   componentData: x

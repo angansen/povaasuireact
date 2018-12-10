@@ -62,7 +62,7 @@ import axios from 'axios';
           axios.post(global.prodIp+':'+global.prodPort+'/user_list/',JSON.stringify(povVariable))
           .then(res => {
               var myObj = res.data;
-              var n, m = '<tr><th>Name</th><th>EmailId</th><th>Role</th><th>Action</th></tr>';
+              var n, m = '<tr><th>Name</th><th>EmailId</th><th>Company Name</th><th>Phone no</th><th>Role</th><th>Action</th></tr>';
              
               for(n=0;n<myObj.length;n++){
                   if(myObj[n].POVAAS_USER_ACTIVESTATUS==1){
@@ -85,7 +85,7 @@ import axios from 'axios';
                 }else{
                     var status="notSame";
                 }
-                m += '<tr><td>'+myObj[n].USERNAME+'</td><td>'+myObj[n].EMAIL+'</td><td>'+role+'</td><td> <label class="switchcompanyStatus switch" type="'+myObj[n].USER_ID+'" alt="'+myObj[n].POVAAS_USER_ACTIVESTATUS+'"><input type="checkbox" '+Userclass+'><span class="slider round"></span></label></td><td class="EditCP" data-id="'+myObj[n].EMAIL+'" data-title="'+myObj[n].PASSWORD+'" type="'+myObj[n].USERNAME+'" data-type="'+status+'" data-num="'+myObj[n].USER_ID+'" title="Edit profile">&#x270D;</td></tr>';
+                m += '<tr><td>'+myObj[n].USERNAME+'</td><td>'+myObj[n].EMAIL+'</td><td>'+myObj[n].COMPANY_NAME+'</td><td>'+myObj[n].USER_PHONE+'</td><td>'+role+'</td><td> <label class="switchcompanyStatus switch" type="'+myObj[n].USER_ID+'" alt="'+myObj[n].POVAAS_USER_ACTIVESTATUS+'"><input type="checkbox" '+Userclass+'><span class="slider round"></span></label></td><td class="EditCP" data-id="'+myObj[n].EMAIL+'" data-title="'+myObj[n].PASSWORD+'" type="'+myObj[n].USERNAME+'" data-type="'+status+'" data-num="'+myObj[n].USER_ID+'" title="Edit profile">&#x270D;</td></tr>';
               }
               this.setState({
                   componentData: m
@@ -192,8 +192,6 @@ import axios from 'axios';
                 document.getElementById("StatusPage").classList.add("hide");
                 document.getElementById("close").classList.remove("hide");
                 document.getElementById("ConfirmBox").classList.add("hide");
-               
-                
             };
 
             for (var i = 0; i < classname.length; i++) {
@@ -208,15 +206,27 @@ import axios from 'axios';
             axios.post(global.prodIp+':'+global.prodPort+'/company_list/')
             .then(res => {
                 var myObj = res.data;
-                var j, x = '';
-               console.log(myObj.length);
+                var j, x = '',y='',k;
+               //console.log(myObj.length);
                 for (j=0;j< myObj.length-1; j++) {
-                   if(myObj[j].COMPANY_STATUS!=0){
+                   if(myObj[j].COMPANY_STATUS!=0 &&  localStorage.getItem("user_role")==0){
                     //<img src='https://cloud.oracle.com/opc/iaas/images/Jenkins-Logo-185x103.jpg'/>
                     x += '<option value="'+myObj[j].COMPANY_ID+'">'+myObj[j].COMPANY_NAME+'</option>';
-                   }
+                   }else if(myObj[j].COMPANY_STATUS!=0 &&  localStorage.getItem("user_role")==1){
+                    x += '<option value="'+ localStorage.getItem("COMPANY_ID")+'">'+localStorage.getItem("COMPANY_NAME")+'</option>';
+                   break;
+                 }
+                }
+                if(localStorage.getItem("user_role")==0){
+                        y+='<option value="0">SuperAdmin</option><option value="1">Admin</option><option value="2">User</option>';
+                   
+                  
+                }else if(localStorage.getItem("user_role")==1){
+                    y+='<option value="2">User</option>';
+
                 }
                 document.getElementById("usr_profile_Company").innerHTML =x;
+                document.getElementById("usr_profile_Role").innerHTML =y;
             })
             document.getElementById("myModal").style.display = 'block';
             document.getElementById("CreateProfile").classList.remove("hide");

@@ -39,7 +39,7 @@ import axios from 'axios';
               }else{
                 var Companyclass="";  
               }
-            m += '<tr><td>'+myObj[n].COMPANY_NAME+'</td><td> <label class="switchcompanyStatus switch" type="'+myObj[n].COMPANY_ID+'" alt="'+myObj[n].COMPANY_STATUS+'"><input type="checkbox" '+Companyclass+'><span class="slider round"></span></label></td><td name="User1" class="edit-company-profile " type="'+myObj[n].COMPANY_ID+'" title="Edit Company"> &#x270D; </td></tr>';
+            m += '<tr><td>'+myObj[n].COMPANY_NAME+'</td><td> <label class="switchcompanyStatus switch" type="'+myObj[n].COMPANY_ID+'" alt="'+myObj[n].COMPANY_STATUS+'"><input type="checkbox" '+Companyclass+'><span class="slider round"></span></label></td><td name="User1" class="edit-company-profile hide" type="'+myObj[n].COMPANY_ID+'" title="Edit Company"> &#x270D; </td></tr>';
           }
           
         //   m += '<td> <label class="switchcompanyStatus"><input type="checkbox"><span class="slider round"></span></label></td><tr><td>User1</td><td><button name="User1" class="delete-profile "> &times; </button></td></tr>';

@@ -18,6 +18,8 @@ import axios from 'axios';
     }
    
     componentDidMount() {
+
+       
       document.getElementById("showList").classList.remove("hide");
       document.getElementById("logout").classList.remove("hide");
       var povVariable={
@@ -28,9 +30,14 @@ import axios from 'axios';
      }
       axios.post(global.prodIp+':'+global.prodPort+'/dashboard/',JSON.stringify(povVariable))
       .then(res => {
+          console.log(res.status);
+          if(res.status==401){
+            localStorage.clear();
+            window.location.href='/';
+          }
           var myObj = res.data;
           var n, m = '';
-          console.log(myObj.length);
+          console.log(myObj);
           if(myObj.length>0){
           m= "<tr><th>Instance Title</th><th>Solution Name</th><th>Instance IP</th><th>Instance Count</th><th>Status</th><th>Action</th></tr>";
           for (var n=0;n<=myObj.length-1;n++) {
@@ -40,7 +47,12 @@ import axios from 'axios';
             // }
             if(myObj[n].TF_VAR_Ip!='' ){
                     if(myObj[n].TF_VAR_StatusMsg=='RUNNING'){
-                        var actionBtn='<a href="'+myObj[n].TF_VAR_HTTPPath+'" target="_blank"><button  class="launchbtn Yes"> Launch </button></a>&nbsp;&nbsp;<button class="deletebtn No deleteYes" type="'+myObj[n].TF_VAR_id+'" alt="'+myObj[n].TF_Var_SolutionID+'"> Delete </button>';
+                        if(myObj[n].TF_Var_SolutionID=="8"){
+                        var actionBtn='<button  class="launchbtnADWC Yes" alt="'+myObj[n].TF_Var_SolutionID+'"> Launch </button>&nbsp;&nbsp;<button class="deletebtn No deleteYes" type="'+myObj[n].TF_VAR_id+'" alt="'+myObj[n].TF_Var_SolutionID+'"> Delete </button>';
+                        }else{
+                            var actionBtn='<a href="'+myObj[n].TF_VAR_HTTPPath+'" target="_blank"><button  class="launchbtn Yes"> Launch </button></a>&nbsp;&nbsp;<button class="deletebtn No deleteYes" type="'+myObj[n].TF_VAR_id+'" alt="'+myObj[n].TF_Var_SolutionID+'"> Delete </button>';
+                        }                
+                    
                     }else{
                         var actionBtn = '<button class="inprogress" title="disabled"> Launch </button>&nbsp;&nbsp;<button class="deletebtn  No deleteYes"  type="'+myObj[n].TF_VAR_id+'" alt="'+myObj[n].TF_Var_SolutionID+'"> Delete </button><br/><small>Jupiter notebook is not ready yet</small>';  
                     }
@@ -87,10 +99,11 @@ import axios from 'axios';
               componentData: m
           })
       })
-
+    
 
     }
     render() {
+        
         setTimeout(function() {
         if(localStorage.getItem("user_role")==0){
             document.getElementById('companyList').classList.remove('hide'); 
@@ -128,25 +141,59 @@ import axios from 'axios';
               }
           }, 400);
           setTimeout(function() {
-            var classname = document.getElementsByClassName("refresh");
-            var myFunction = function() {
-               
+            var classname = document.getElementsByClassName("launchbtnADWC");
+           
+            var launchbtnADWC = function() {
+                    document.getElementById("myModal").style.display = 'block';
+                    document.getElementById("ADWC_LAunch_form").classList.remove("hide");
+                    var ClouteraAttribute = this.getAttribute("alt");
+                    document.getElementById("PovaasId").value =ClouteraAttribute;
+                    axios.post(global.prodIp+':'+global.prodPort+'/get_object_store_list/')
+                    .then(res => {
+                        var myObj = res.data;
+                        var j, x = '',y='',k;
+                       //console.log(myObj.length);
+                       x='<option value="">Select</option>';
+                        for (j=0;j< myObj.length; j++) {
+                           if(myObj[j].etag){
+                            //<img src='https://cloud.oracle.com/opc/iaas/images/Jenkins-Logo-185x103.jpg'/>
+                            x += '<option value="'+myObj[j].etag+'Name'+myObj[j].name+'">'+myObj[j].name+'</option>';
+                           }
+                        }
+                       
+                        document.getElementById("Osbpath").innerHTML =x;
+                        
+                    })
+                    document.getElementById("ConfirmBox").classList.add("hide");
+                    document.getElementById("content_form").classList.add("hide");
+                    document.getElementById("StatusPage").classList.add("hide");
+                    document.getElementById("close").classList.remove("hide");
                 
             };
 
             for (var i = 0; i < classname.length; i++) {
-                classname[i].addEventListener('click', myFunction, false);
+                classname[i].addEventListener('click', launchbtnADWC, false);
             }
         }, 400);
+
+        var handleRefresh =function(){
+            window.location.href="";
+        }
+
              return (
                  <div>
+                    
                     <div className="userProfilestruc" >
                             <Link  to="/Company" className="hide" id="companyList">
                                 Company List
                             </Link>
+                            
                             <Link  to="/Profile" className="hide" id="userList">
                                  User List
                             </Link>
+                           <Link  to="/dash" name="refresh" onClick={handleRefresh}>Refresh</Link>
+                           
+                            
                         </div>
                     <div className="listingContent">
                         <table dangerouslySetInnerHTML={ { __html:  this.state.componentData } }></table>

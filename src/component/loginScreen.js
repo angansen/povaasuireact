@@ -20,15 +20,8 @@ class loginScreen extends React.Component {
     componentDidMount() {
 
         var userName= localStorage.getItem("username");
-     //   var password= localStorage.getItem("password");
-      //  var status= sessionStorage.getItem("status");
-       
-      
-      // document.getElementById('username').innerHTML=userName;
          if(userName!=undefined){
             localStorage.setItem("user_name", userName);
-           // localStorage.setItem("user_role", document.getElementById('USER_ROLE').value);
-
             this.setState({ LoginSuccess: true });
     
          }
@@ -60,17 +53,9 @@ class loginScreen extends React.Component {
             axios.post(global.prodIp+':'+global.prodPort+'/login_details/',JSON.stringify(userVariable))
             .then(response => {
               var json = response.data;
-              //console.log(json[0]);
-               
-            //  console.log(json.data);
-                    // document.getElementById("loginbox").classList.add("hide");
-                    // document.getElementById("main").classList.remove("hide");
-                    // document.getElementById("logout").classList.remove("hide");
-                    //console.log(json.data);
+              
                     if(json[0]){
-                            // alert(json.data);
-                           
-                          // global.username=json[0].userName;
+                          
                            if (typeof(Storage) !== "undefined") {
                             if(userName!=undefined){
                             }
@@ -86,14 +71,13 @@ class loginScreen extends React.Component {
                                
                                localStorage.setItem("EMAIL", json[0].EMAIL);
                                
-                               
-                               
-                                // document.getElementById('username').innerHTML=userName;
                            }
                        }
                          this.setState({ LoginSuccess: true });
-                    }else{
-                        alert('Please try again you are not authorized user');
+                    }
+                    
+                    else{
+                        alert('You are not authorized user, Please contact your administrator.');
                         return false;
                     }
                     
